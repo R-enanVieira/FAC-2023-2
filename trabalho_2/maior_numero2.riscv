@@ -1,0 +1,35 @@
+.data
+str:
+	.string "\n"
+
+.text
+main:
+	li a7, 5
+	ecall
+	add t1, a0, zero
+	li t2, -2147483638
+	addi t3, zero, 1
+	
+loop:
+	addi t1, t1, -1
+	li a7, 5
+	ecall
+	bge a0, t2, swap
+	bge t1, t3, loop
+	j done
+	
+swap:
+	mv t2, a0
+	bge t1, t3, loop
+	
+done:
+	li a7, 1
+	mv a0, t2
+	ecall
+	
+	li a7, 4
+	la a0, str
+	ecall
+	
+	li a7, 10
+	

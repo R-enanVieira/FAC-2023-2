@@ -1,0 +1,35 @@
+.data
+str:
+	.string "\n"
+
+.text
+main:
+	li a7, 5 #leio o número de vezes que o laço vai rodar
+	ecall
+	add t1, a0, zero #salvo esse valor em t1
+	add t2, zero, zero #inicializo t2 como sendo 0, ele vai ser nossa variável que vai guardar sempre o maior valor
+	addi t3, zero, 1 #inicializo t3 como sendo 1, ela vai servi como uma variavel auxiliar ao usarmos o beq
+loop:
+	addi t1, t1, -1 #decremento t1 a cada passada do loop
+	li a7, 5 #faço a leitura dos n números da entrada
+	ecall
+	bge a0, t2, swap #caso o número lido seja maior que o nosso maior número atual, eu faço o swap deles
+	bge t1, t3, loop #enquato t1 for maior ou igual a 1 o loop vai rodar
+	beq t3, t1, done #se o loop for igual a 1, eu paro o loop e pulo o swap
+	
+swap:
+	mv t2, a0 #faço o swap do valor lido com a variável que armazena o maior
+	bge t1, t3, loop #se t1 for maior ou igual a 1 o loop vai rodar
+	
+done:
+	li a7, 1 #chamo a syscall para imprimir um inteiro
+	mv a0, t2 #coloco o valor a ser imprimido em a0
+	ecall
+	
+	li a7, 4 #printo uma quebra de linha após a resposta
+	la a0, str
+	ecall
+	
+	li a7, 10 #encerro o programa retornando zero
+	ecall
+	

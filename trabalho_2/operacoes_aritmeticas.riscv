@@ -1,0 +1,161 @@
+.data
+str:
+	.string "\n"
+	
+sadd:
+	.string "ADD: "
+	
+ssub:
+	.string "SUB: "
+	
+sand:
+	.string "AND: "
+	
+sor:
+	.string "OR: "
+	
+sxor:
+	.string "XOR: "
+	
+smask:
+	.string "MASK: "
+	
+ssllI:
+	.string "SLL("
+	
+ssllII:
+	.string "): "
+	
+ssrlI:
+	.string "SRL("
+	
+ssrlII:
+	.string "): "
+	
+.text
+main:
+	li a7 5 	#leitura de a
+  	ecall
+  	mv t1, a0	#salvando o valor de a no registrador t1
+  
+  	li a7 5		#leitura de b
+  	ecall
+  	mv t2, a0	#salvando o valor de b no registrador t2
+  	
+  	li a7 5		#leitura de c
+  	ecall		
+  	mv t3, a0	#salvando o valor de c no registrador t3
+
+  	la a0, sadd # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall      # actually issue the call
+  	
+	li a7 1		#chama a syscall para printar um inteiro
+	add a0, t1, t2	#coloca o resultado da soma no registrador que vai ser printado
+	ecall
+	
+  	la a0, str # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall      # actually issue the call
+	
+  	la a0, ssub # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall      # actually issue the call
+  	
+	li a7 1		#chama a syscall para printar um inteiro
+	sub a0, t1, t2	#coloca o resultado da subtração no registrador que vai ser printado
+	ecall
+	
+  	la a0, str # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall
+  	
+  	la a0, sand # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall      # actually issue the call
+  	
+  	li a7 1		#chama a syscall para printar um inteiro
+	and a0, t1, t2	#coloca o resultado da subtração no registrador que vai ser printado
+	ecall
+	
+  	la a0, str # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall
+  	
+  	la a0, sor # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall      # actually issue the call
+  	
+  	li a7 1		#chama a syscall para printar um inteiro
+	or a0, t1, t2	#coloca o resultado da subtração no registrador que vai ser printado
+	ecall
+	
+  	la a0, str # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall
+  	
+  	la a0, sxor # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall      # actually issue the call
+  	
+  	li a7 1		#chama a syscall para printar um inteiro
+	xor a0, t1, t2	#coloca o resultado da subtração no registrador que vai ser printado
+	ecall
+	
+  	la a0, str # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall
+  	
+  	la a0, smask # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall      # actually issue the call
+
+  	andi t4, t3, 31 #salvando o valor da mascara em t4  	
+  	
+  	li a7 1		#chama a syscall para printar um inteiro
+	add a0, zero, t4	#coloca o resultado da subtração no registrador que vai ser printado
+	ecall
+	
+	la a0, str
+	li a7, 4
+	ecall
+	
+	la a0, ssllI
+	li a7, 4
+	ecall
+	li a7, 1
+	add a0, zero, t4
+	ecall
+	la a0, ssllII
+	li a7, 4
+	ecall
+	
+	li a7, 1
+	sll a0, t1, t4
+	ecall
+	
+	la a0, str
+	li a7, 4
+	ecall
+	
+	la a0, ssrlI
+	li a7, 4
+	ecall
+	li a7, 1
+	add a0, zero, t4
+	ecall
+	la a0, ssrlII
+	li a7, 4
+	ecall
+	
+	li a7, 1
+	srl a0, t2, t4
+	ecall
+	
+  	la a0, str # la is similar to li, but works for loading addresses
+  	li a7, 4  # a7 is what determines which system call we are calling and we what to call write (64)
+  	ecall
+	
+  	li a0, 0   # The exit code we will be returning is 0
+  	li a7, 93  # Again we need to indicate what system call we are making and this time we are calling exit(93)
+  	ecall 

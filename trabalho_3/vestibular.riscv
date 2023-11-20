@@ -1,0 +1,68 @@
+.data
+str:
+	.string "\n"
+ans:
+	.string "                                                                               "
+gab:
+	.string "                                                                               "
+
+.text
+main:
+	li a7, 5 #syscall to read a integer
+	ecall
+	add a2, a0, zero
+
+	li a7, 8 #syscall to read a string from console
+	addi a1, a2, 100 #set the max length of the string
+	la a0, ans
+	ecall
+	
+	li a7, 8 #syscall to read a string from console
+	addi a1, a2, 100 #set the max length of the string
+	la a0, gab
+	ecall
+	
+	add a3, zero, zero #inicializando a resposta final
+	add t0, zero, zero #contador de quantas vezes o loop vai rodar
+	
+	la t2, ans #movendo o valor guardado em ans para t2
+	la t3, gab #movendo o valor guardado em ans para t2
+
+loop:	
+	addi, t0, t0, 1
+	lbu s2, 0(t2) #carrega o primeiro caracter da string resposta
+	lbu s3, 0(t3) #carrega o primeiro caracter da string do gabarito
+	
+	beq s2, s3, ac #compara se as respostas são iguais
+	
+	j prox #caso não sejam, vou para o proximo caracter
+
+ac:
+	addi a3, a3, 1 #incremento minha resposta final de quantos acertos
+	addi t2, t2, 1 #incremento minha string, ou seja, o primeiro caracter que vamos pegar passa ser o segundo
+	addi t3, t3, 1 #incremento minha string, ou seja, o primeiro caracter que vamos pegar passa ser o segundo
+	
+	blt t0, a2, loop
+	
+	j print
+
+prox:
+	addi t2, t2, 1 #incremento minha string, ou seja, o primeiro caracter que vamos pegar passa ser o segundo
+	addi t3, t3, 1	#incremento minha string, ou seja, o primeiro caracter que vamos pegar passa ser o segundo
+	
+	blt t0, a2, loop
+	
+	j print
+
+print:
+	li, a7, 1
+	mv, a0, a3
+	ecall
+	
+	li a7, 4
+	la a0, str
+	ecall
+	
+	li a7, 10
+	ecall
+	
