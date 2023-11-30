@@ -1,0 +1,64 @@
+.data
+	is_prime:
+		.string "sim\n"
+	not_prime:
+		.string "nao\n"
+	not_valid:
+		.string "Entrada invalida.\n"
+
+.text
+	main:
+		#leitura da entrada (inteiro)
+		li a7, 5
+		ecall
+		mv s1, a0
+		
+		addi t0, zero, 1
+		#verificação se é um inteiro valido
+		blt s1, t0, invalido
+		
+		#preparativos para entrar em um loop
+		addi t0, zero, 1 #indice do loop
+		add t1, zero, zero #contador de divisores
+		
+	loop:
+		bgt t0, s1, ans
+		rem t3, s1, t0 #pegando o resto da divisão
+		beqz t3, incrementa
+		addi t0, t0, 1
+		j loop
+		
+	ans:
+		addi t3, zero, 2
+		beq t1, t3, print_is
+		j print_not
+	
+	print_is:
+		li a7, 4
+		la a0, is_prime
+		ecall
+		
+		li a7, 10
+		ecall
+		
+	print_not:
+		li a7, 4
+		la a0, not_prime
+		ecall
+		
+		li a7, 10
+		ecall
+
+	incrementa:
+		addi t1, t1, 1
+		addi t0, t0, 1
+		j loop
+				
+	invalido:
+		li a7, 4
+		la a0, not_valid
+		ecall
+		
+		li a7, 10
+		ecall
+		

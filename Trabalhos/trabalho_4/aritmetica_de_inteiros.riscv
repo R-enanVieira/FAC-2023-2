@@ -1,0 +1,144 @@
+.data
+	is_prime1:
+		.string "A exponencial modular "
+	is_prime2:
+		.string " elevado a "
+	is_prime3:
+		.string " (mod "
+	is_prime4:
+		.string ") eh "
+	endl:
+		.string ".\n"
+	
+	not_prime:
+		.string "O modulo nao eh primo.\n"
+	not_valid:
+		.string "Entradas invalidas.\n"
+
+.text
+	main:
+		#leitura da entrada (inteiro)
+		li a7, 5
+		ecall
+		mv s1, a0
+		
+		li a7, 5
+		ecall
+		mv s2, a0
+		
+		li a7, 5
+		ecall
+		mv s3, a0
+		
+		addi t0, zero, 1
+		#verificação se é um inteiro valido
+		blt s1, t0, invalido
+		blt s2, t0, invalido
+		blt s3, t0, invalido
+		
+		#preparativos para entrar em um loop
+		addi t0, zero, 1 #indice do loop
+		add t1, zero, zero #contador de divisores
+		
+	loop:
+		bgt t0, s3, exp
+		rem t3, s3, t0 #pegando o resto da divisão
+		beqz t3, incrementa
+		addi t0, t0, 1
+		j loop
+		
+	exp:
+		addi t3, zero, 2
+		beq t1, t3, print_is
+		j print_not
+	
+	print_is:
+		li a7, 4
+		la a0, is_prime1
+		ecall
+		
+		li a7, 1
+		mv a0, s1
+		ecall
+		
+		li a7, 4
+		la a0, is_prime2
+		ecall
+		
+		li a7, 1
+		mv a0, s2
+		ecall
+		
+		li a7, 4
+		la a0, is_prime3
+		ecall
+		
+		li a7, 1
+		mv a0, s3
+		ecall
+		
+		li a7, 4
+		la, a0, is_prime4
+		ecall
+		
+		add s4, zero, zero
+		
+		remu s1, s1, s3
+		
+		beq s1, zero, print_ans
+		addi s4, zero 1
+		
+	calc_ans:
+		beqz s2, print_ans
+		blt s2, zero, print_ans
+		andi t0, s2, 0x00000001
+		addi t1, zero, 1
+		beq t0, t1, update_ans
+		srli s2, s2, 1
+		mul s1, s1, s1
+		remu s1, s1, s3
+		j calc_ans
+		
+	update_ans:
+		mul s4, s4, s1
+		remu s4, s4 s3
+		srli s2, s2, 1
+		mul s1, s1, s1
+		remu s1, s1, s3
+		j calc_ans
+				
+	print_ans:
+		li a7, 1
+		mv a0, s4
+		ecall
+		
+		li a7, 4
+		la a0, endl
+		ecall
+		
+		li a7, 10
+		ecall
+		
+	print_not:
+		li a7, 4
+		la a0, not_prime
+		ecall
+		
+		li a7, 10
+		ecall
+
+	incrementa:
+		addi t1, t1, 1
+		addi t0, t0, 1
+		j loop
+				
+	invalido:
+		li a7, 4
+		la a0, not_valid
+		ecall
+		
+		li a7, 10
+		ecall
+		
+#caso teste que falha 36103 elevado a 492 (mod 65521) eh 37758.
+#resposta esperada: 36103 elevado a 492 (mod 65521) eh 54446
